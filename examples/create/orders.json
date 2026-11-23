@@ -1,0 +1,30 @@
+[
+  {
+    "orderId": "00000000-0000-4000-8000-0000000000a1",
+    "orderNumber": "MS-EX-A-0001",
+    "client": "Velký Klient s.r.o.",
+    "carrier": "Kurýr Vltava",
+    "shippingMethod": "Kurýr Vltava Standard",
+    "trackingNumber": "KVEXA0001",
+    "trackingUrl": null,
+    "status": "waiting_for_carrier",
+    "createdAt": "2026-10-28T09:00:00+01:00",
+    "packedAt": "2026-10-29T10:00:00+01:00",
+    "shippedAt": null,
+    "updatedAt": "2026-10-29T10:00:00+01:00"
+  },
+  {
+    "orderId": "00000000-0000-4000-8000-0000000000b1",
+    "orderNumber": "MS-EX-B-0001",
+    "client": "Malý Klient s.r.o.",
+    "carrier": "ParcelNord",
+    "shippingMethod": "ParcelNord Home",
+    "trackingNumber": "PNEXB0001",
+    "trackingUrl": null,
+    "status": "carrier_picked_up",
+    "createdAt": "2026-10-07T10:00:00+02:00",
+    "packedAt": "2026-10-08T10:00:00+02:00",
+    "shippedAt": "2026-10-09T15:20:00+02:00",
+    "updatedAt": "2026-10-09T15:20:00+02:00"
+  }
+]

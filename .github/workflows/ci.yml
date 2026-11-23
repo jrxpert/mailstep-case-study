@@ -1,0 +1,69 @@
+name: CI
+
+on:
+  push:
+    branches: [main, "feature/**"]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: Typecheck, tests, coverage, regression gates
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install (lockfile only)
+        run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      # All tests + native coverage gate on application code (src/): lines ≥ 95 %, branches ≥ 85 %, functions ≥ 95 %.
+      - name: Tests with coverage gate
+        run: npm run test:coverage
+
+      # Real CLI on a fresh copy of data/; full SHA-256 of all outputs against scripts/baseline-outputs.json.
+      - name: Baseline regression gate
+        run: npm run verify:baseline
+
+      - name: Repository integrity
+        run: |
+          # No tracked file may be modified by the run (outputs go to ignored out/ or temp dirs).
+          git diff --exit-code
+          test -z "$(git status --porcelain)"
+          # Whitespace errors in our own files. Supplied fixtures (data/, docs/assignments/) are pinned by
+          # SHA-256 in test/integrity.test.ts and kept byte-identical (labels.csv uses CRLF), so they are excluded here.
+          git diff --check "$(git hash-object -t tree /dev/null)" HEAD -- . ':!data' ':!docs/assignments'
+          # Runtime dependencies only.
+          npm audit --omit=dev --audit-level=high
+
+  mutation:
+    name: Targeted mutation testing
+    # ~3 min: run on pull requests and on demand, not on every push.
+    if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Mutation testing (fails on any surviving non-equivalent mutant)
+        run: npm run mutation

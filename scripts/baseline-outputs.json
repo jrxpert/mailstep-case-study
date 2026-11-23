@@ -1,0 +1,15 @@
+{
+  "description": "Default-run outputs (npm start on data/). Full SHA-256 of each output; update only with an explained change of the outputs (docs/quality-audit.md).",
+  "sha256": {
+    "decisions.json": "db6aee07fd5dd6f180ba904a81efb78b2b5a26b8368a91a48421b94cf78bee11",
+    "tracking-eval.json": "60139bf2fa15407b74934f75995fb3b0f797dd3c5d98ba1e8ec43b4317f1700d",
+    "tracking-eval.md": "33c8274b18f48026e7bdacc401c38cdc3ad949e654d649ed3c9f7d86fcdf0a20"
+  },
+  "expected": {
+    "sourceRows": 33,
+    "logicalOrders": 32,
+    "eligibility": { "eligible": 23, "ineligible": 9, "undetermined": 0 },
+    "actions": { "create": 0, "skip": 14, "review": 18 },
+    "tracking": { "total": 20, "correct": 16, "critical": 0 }
+  }
+}
